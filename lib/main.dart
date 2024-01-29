@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:google_books_demo/view/book_detail_page.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 
@@ -53,26 +54,41 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Google Books api demo'),
+        title: const Text('Google Books api demo'),
       ),
       body: ListView.builder(
         itemCount: items.length,
         itemBuilder: (BuildContext context, int index) {
-          return Card(
-            child: Column(
-              children: <Widget>[
-                ListTile(
-                  leading: Image.network(
-                    items[index]['volumeInfo']['imageLinks']['thumbnail'],
-                  ),
-                  title: Text(items[index]['volumeInfo']['title']),
-                  subtitle: Text(items[index]['volumeInfo']['publishedDate']),
+          return GestureDetector(
+            onTap: () {
+              // Cardがタップされたときの処理
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => BookDetailPage(
+                    title: items[index]['volumeInfo']['title'],
+                    imageUrl: items[index]['volumeInfo']['imageLinks']['thumbnail'],
+                  ), // 遷移先の画面
                 ),
-              ],
+              );
+            },
+            child: Card(
+              child: Column(
+                children: <Widget>[
+                  ListTile(
+                    leading: Image.network(
+                      items[index]['volumeInfo']['imageLinks']['thumbnail'],
+                    ),
+                    title: Text(items[index]['volumeInfo']['title']),
+                    subtitle: Text(items[index]['volumeInfo']['publishedDate']),
+                  ),
+                ],
+              ),
             ),
           );
         },
       ),
     );
   }
+
 }
